@@ -1,0 +1,16 @@
+{
+  "Version": 1,
+  "ProjectMap": {
+    "ef08980d-0943-432a-9dff-be850b9e7dd5": {
+      "ProjectGuid": "ef08980d-0943-432a-9dff-be850b9e7dd5",
+      "DisplayName": "eTickets",
+      "ColorIndex": 0
+    },
+    "919fd655-f067-4ba2-b932-d926e85dd6b4": {
+      "ProjectGuid": "919fd655-f067-4ba2-b932-d926e85dd6b4",
+      "DisplayName": "Script Documents",
+      "ColorIndex": 1
+    }
+  },
+  "NextColorIndex": 2
+}

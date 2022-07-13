@@ -1,0 +1,120 @@
+﻿@using Microsoft.AspNetCore.Http
+@model List<Order>
+
+@{ 
+    ViewData["Title"] = "All orders";
+}
+
+<div class="row">
+    <div class="col-md-8 offset-2">
+        <p>
+            <h4>List of all your orders</h4>
+        </p>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Order ID</th>
+                    <th>Items</th>
+                    <th>Total</th>
+                     @if (Context.Session.GetString("Rid") == "3")
+                      {
+                       //<th>User</th>
+                       <th>Update Request</th>
+                      }
+                     @if (Context.Session.GetString("Rid") == "4")
+                     {
+                      <th>Status</th>
+                     }
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var order in Model)
+                {
+                <tr>
+                    <td class="align-middle">@order.Id</td>
+                    <td class="align-middle">
+                        <ul style="list-style-type:none">
+                            @foreach (var item in order.OrderItem)
+                            {
+                                <li>
+                                    <div class="alert alert-info" role="alert">
+                                        <span class="badge bg-success">@item.Amount</span> [@item.Price.ToString("c")] - @item.Movie.Name
+                                    </div>
+                                </li>
+                            }
+                        </ul>
+                    </td>
+                    <td class="align-middle">
+                        @order.OrderItem.Select(m => m.Movie.Price * m.Amount).Sum().ToString("c")
+                    </td>
+                        @if (Context.Session.GetString("Rid") == "3")
+                        {
+                            //<td class="align-middle"> @order.Register.Name </td>
+                             <td class="align-middle" id="idMyForm">
+                                 @*<td class="align-middle">*@
+                            @*  <textarea id="ordvalue1">@order.Id</textarea>*@
+                           @* <a asp-controller="Order" asp-action="Order_Status">Action Required</a>  *@
+                              @*<div class="AddPopUp">
+                                    <button type="button" class="btn btn-outline-dark">Action Required</button>
+                                </div>
+                                <div class="modal fade" id="MyPopUp" role="dialog">
+                                   <div class="modal-dialog" style="margin-left:620px;align-content:center">
+                                      <div class="modal-content">
+                                          <div class="modal-body align-middle">
+                                            <textarea id="ordvalue2">@order.Id</textarea>
+                                            <a type="button" class="btn btn-success" asp-action="Confirm" asp-route-id="@order.Id" id="confirm_btn">Confirm</a>
+                                            <a type="button" class="btn btn-info"  asp-action="Wait" asp-route-id="@order.Id" style="margin-left:30px" id="wait_btn">Wait</a>
+                                            <a type="button" class="btn btn-danger"  asp-action="Cancel" asp-route-id="@order.Id" style="margin-left:25px" asp-action="Index" id="cancel_btn">Cancel</a>   
+                                        </div>
+                                      </div>
+                                    </div>
+                                </div>*@
+                              
+                                @if(order.Order_Status == "Confirm")
+                                {
+                                     <a type="button" class="btn btn-success" asp-action="Order" asp-route-status="confirm" asp-route-id="@order.Id">Confirm</a>
+                                     <a type="button" class="btn btn-info" asp-action="Order" asp-route-status="wait" asp-route-id="@order.Id" style="margin-left:30px;color: currentColor;cursor: not-allowed;opacity: 0.5;text-decoration: none;">Wait</a>
+                                     <a type="button" class="btn btn-danger" asp-action="Order" asp-route-status="cancel" asp-route-id="@order.Id" style="margin-left:25px;color: currentColor;cursor: not-allowed;opacity: 0.5;text-decoration: none;" asp-action="Index">Cancel</a>
+                                }
+                                else if(order.Order_Status == "Pending")
+                                {
+                                     <a type="button" class="btn btn-success" asp-action="Order" asp-route-status="confirm" asp-route-id="@order.Id">Confirm</a>
+                                     <a type="button" class="btn btn-info" asp-action="Order" asp-route-status="wait" asp-route-id="@order.Id" style="margin-left:30px;color: currentColor;cursor: not-allowed;opacity: 0.5;text-decoration: none;">Wait</a>
+                                     <a type="button" class="btn btn-danger" asp-action="Order" asp-route-status="cancel" asp-route-id="@order.Id" style="margin-left:25px" asp-action="Index">Cancel</a>
+                                }
+                                else{
+                                     <a type="button" class="btn btn-success" asp-action="Order" asp-route-status="confirm" style="color: currentColor;cursor: not-allowed;opacity: 0.5;text-decoration: none;" asp-route-id="@order.Id">Confirm</a>
+                                     <a type="button" class="btn btn-info" asp-action="Order" asp-route-status="wait" asp-route-id="@order.Id" style="margin-left:30px;color: currentColor;cursor: not-allowed;opacity: 0.5;text-decoration: none;">Wait</a>
+                                     <a type="button" class="btn btn-danger" asp-action="Order" asp-route-status="cancel" asp-route-id="@order.Id" style="margin-left:25px;color: currentColor;cursor: not-allowed;opacity: 0.5;text-decoration: none;" asp-action="Index">Cancel</a>
+                                }
+                            @*<a type="button" class="btn btn-success" asp-action="Confirm" asp-route-id="@order.Id" id="confirm_btn">Confirm</a>
+                            <a type="button" class="btn btn-info" asp-action="Wait" asp-route-id="@order.Id" style="margin-left:30px" id="wait_btn">Wait</a>
+                            <a type="button" class="btn btn-danger" asp-action="Cancel" asp-route-id="@order.Id" style="margin-left:25px" asp-action="Index" id="cancel_btn">Cancel</a>*@
+                            </td>
+                        }
+                         @if (Context.Session.GetString("Rid") == "4")
+                        {
+                           <td class="align-middle">@order.Order_Status</td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+
+
+
+@*@section Scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(".AddPopUp").click(function (e) {
+                $('#MyPopUp').modal('show');
+            });
+        });
+    </script>
+    }
+*@
